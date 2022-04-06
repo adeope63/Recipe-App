@@ -47,13 +47,12 @@ function addMeal(mealData, random = false) {
 
   meal.innerHTML = `
             <div class="meal-header">
-              ${
-                random
-                  ? `<span class="random">
+              ${random
+      ? `<span class="random">
             Random Recipe
           </span>`
-                  : ""
-              }
+      : ""
+    }
               <img src="${mealData.strMealThumb}" alt="${mealData.strMeal}">
             </div>
             <div class="meal-body">
@@ -152,7 +151,7 @@ function showMealInfo(mealData) {
   for (let i = 1; i <= 20; i++) {
     if (mealData["strIngredient" + i]) {
       ingredients.push(
-        `${mealData["strIngredient" + i]} -
+        `${mealData["strIngredient" + i]} -- ${mealData["strMeasure" + i]}`
       );
     } else {
       break;
@@ -163,42 +162,45 @@ function showMealInfo(mealData) {
 
   mealPopup.classList.remove("hidden");
   mealEl.innerHTML = `
-    <h1>${mealData.strMeal}</h1>
-            <img
-              src="${mealData.strMealThumb}"
-              alt="${mealData.strMeal}"
-            />
-          </div>
-
-          <div>
-            <p>
-              ${mealData.strInstructions}
-            </p>
-            <h3>Ingredients</h3>
-            <ul>
+        <h1>${mealData.strMeal}</h1>
+        <img
+            src="${mealData.strMealThumb}"
+            alt="${mealData.strMeal}"
+        />
+        <p>
+        ${mealData.strInstructions}
+        </p>
+        <h3>Ingredients:</h3>
+        <ul>
             ${ingredients
               .map(
                 (ing) => `
-            <li>${ing}</li>`
+            <li>${ing}</li>
+            `
               )
               .join("")}
-            </ul>
+        </ul>
     `;
+
+  mealInfoEl.appendChild(mealEl);
+
+  // show the popup
+  mealPopup.classList.remove("hidden");
 }
 
-searchBtn.addEventListener("click", async () => {
-  mealsEl.innerHTML = "";
-  const search = searchTerm.value;
+    searchBtn.addEventListener("click", async () => {
+      mealsEl.innerHTML = "";
+      const search = searchTerm.value;
 
-  const meals = await getMealsBySearch(search);
+      const meals = await getMealsBySearch(search);
 
-  if (meals) {
-    meals.forEach((meal) => {
-      addMeal(meal);
-    });
-  }
+    if (meals) {
+        meals.forEach((meal) => {
+            addMeal(meal);
+        });
+    }
 });
 
 popupCloseBtn.addEventListener("click", () => {
-  mealPopup.classList.add("hidden");
+    mealPopup.classList.add("hidden");
 });
